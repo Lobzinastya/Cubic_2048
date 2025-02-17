@@ -5,7 +5,6 @@ from PIL import Image, ImageDraw, ImageFont
 from logic import Game
 
 
-# Цвета текста
 color_text = {
     2: (117, 100, 82, 255),
     4: (154, 134, 117, 255),
@@ -28,7 +27,6 @@ color_back = {
 
 
 def generate_texture(n):
-    """Создание текстуры с цифрой"""
     texture_path = f'textures/{n}.png'
     if not os.path.exists(texture_path):
         img_size = 256
@@ -60,7 +58,6 @@ def generate_texture(n):
 
 
 class NumberCube(Entity):
-    """Кубик с числом"""
     def __init__(self, number, position=(0, 0, 0), scale=1, **kwargs):
         super().__init__(**kwargs)
         texture_path = generate_texture(number)
@@ -86,7 +83,6 @@ class NumberCube(Entity):
 
 
 def create_3d_grid(values, rows=3, cols=3, depth=3, spacing=1.2, scale=1):
-    """Создание 3D-сетки кубов"""
     cubes = []
     for x in range(rows):
         for y in range(cols):
@@ -100,37 +96,51 @@ def create_3d_grid(values, rows=3, cols=3, depth=3, spacing=1.2, scale=1):
     return cubes
 
 
-# ✅ **Настройка приложения**
+
 app = Ursina()
 window.color = color.rgb(189 / 255, 172 / 255, 151 / 255)
 
-# ✅ **Инициализация игры**
+
 d = 3
 my_game = Game(d)
 my_game.pretty()
 cubes = create_3d_grid(values=my_game.values, rows=d, cols=d, depth=d, spacing=1.1)
 
-# ✅ **Настройка камеры**
-EditorCamera()
-camera.position = (6, 6, -10)
-camera.look_at((1.5, 1.5, 1.5))  # Смотрим в центр сетки
 
-game_over_text = None  # Текст для окончания игры
+EditorCamera()
+camera.position = (7, 5, -10)
+camera.look_at((4.5, 2.5, 1.5))
+
+game_over_text = None
+
+
+controls_text = Text(
+    text="Control:\nW/S - up/down\nA/D - left/right\nQ/E - front/rear",
+    position=(-0.85, 0.4),
+    scale=0.8,
+    color=color.white
+)
+
+score_text = Text(
+    text=f"Score: {my_game.score}",
+    position=(-0.85, 0.3),
+    scale=2,
+    color=color.white
+)
+
+
 
 
 def update_cubes():
-
     global cubes
     for cube in cubes:
         destroy(cube)
     cubes.clear()
-    cubes = create_3d_grid(values=my_game.values, rows=d, cols=d, depth=d, spacing=1.2)
-
+    cubes = create_3d_grid(values=my_game.values, rows=d, cols=d, depth=d, spacing=1.1)
+    score_text.text = f"Score: {my_game.score}"
 
 def input(key):
-    """Обрабатываем ввод WASDQE"""
     global game_over_text
-
     if key in ['w', 'a', 's', 'd', 'q', 'e']:  # Только нужные клавиши
         my_game.update(key)
         my_game.is_finished()
