@@ -4,6 +4,20 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 from logic import Game
 
+from panda3d.core import loadPrcFileData
+
+# Принудительно используем OpenGL (для большинства систем)
+loadPrcFileData('', 'load-display pandagl')
+
+# Если OpenGL не работает, раскомментируйте для DirectX 9:
+# loadPrcFileData('', 'load-display pandadx9')
+
+# Включаем режим оконного рендера (без этого могут быть проблемы)
+loadPrcFileData('', 'aux-display pandagl')
+
+
+
+
 
 color_text = {
     2: (117, 100, 82, 255),
@@ -154,6 +168,7 @@ def input(key):
                 scale=2,
                 color=color.green
             )
+            application.pause()
 
         if my_game.end:
             game_over_text = Text(
@@ -162,6 +177,7 @@ def input(key):
                 scale=2,
                 color=color.red
             )
+            application.pause()
 
 
 app.run()
