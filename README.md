@@ -6,3 +6,10 @@
 
 ---
 Just for fun
+
+
+---
+
+### Credits
+
+Inspired by the original [2048 game by Gabriele Cirulli](https://github.com/gabrielecirulli/2048).
